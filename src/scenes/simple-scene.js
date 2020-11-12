@@ -1,6 +1,6 @@
 class SimpleScene extends Phaser.Scene {
   preload() {
-    this.load.image('cokecan', 'assets/cokecan.png');
+    this.load.image('cokecan', 'cokecan.png');
   }
 
   create() {

@@ -28,7 +28,13 @@ module.exports = {
             presets: ['env']
           }
         }
-      }
+      },
+      {
+        test: /\.(png|svg|jpe?g|gif)$/,
+        use: [
+          'file-loader',
+        ],
+      },
     ]
   },
   plugins: [
@@ -39,7 +45,7 @@ module.exports = {
           to: path.resolve(__dirname, 'dist')
         },
         {
-          from: path.resolve(__dirname, 'assets', '**', '*'),
+          from: path.resolve(__dirname, 'assets/'),
           to: path.resolve(__dirname, 'dist')
         }
       ],
