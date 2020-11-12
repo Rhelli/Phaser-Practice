@@ -4,6 +4,8 @@ let cursors;
 let stars;
 let score = 0;
 let scoreText;
+let bombs;
+let gameOver = false;
 
 class SimpleScene extends Phaser.Scene {
   preload() {
@@ -24,6 +26,8 @@ class SimpleScene extends Phaser.Scene {
     platforms.create(750, 220, 'ground');
 
     player = this.physics.add.sprite(100, 450, 'dude');
+
+    bombs = this.physics.add.group();
 
     player.setBounce(0.2);
     player.setCollideWorldBounds(true);
@@ -62,10 +66,32 @@ class SimpleScene extends Phaser.Scene {
       star.disableBody(true, true)
       score += 10;
       scoreText.setText('Score: ' + score);
+
+      if (stars.countActive(true) === 0) {
+        stars.children.iterate((child) => {
+          child.enableBody(true, child.x, 0, true, true);
+        });
+
+        let x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+
+        let bomb = bombs.create(x, 16, 'bomb');
+        bomb.setBounce(1);
+        bomb.setCollideWorldBounds(true);
+        bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+      }
+    }
+
+    const hitBomb = (player, bomb) => {
+      this.physics.pause();
+      player.setTint(0xff0000);
+      player.anims.play('turn');
+      gameOver = true;
     }
 
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', file: '#000' });
 
+    this.physics.add.collider(bombs, platforms);
+    this.physics.add.collider(player, bombs, hitBomb, null, this);
     this.physics.add.collider(stars, platforms);
     this.physics.add.overlap(player, stars, collectStar, null, this);
     this.physics.add.collider(player, platforms);
