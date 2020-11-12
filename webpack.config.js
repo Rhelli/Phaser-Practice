@@ -5,11 +5,12 @@ const webpack = require('webpack');
 module.exports = {
   mode: "development",
   entry: {
-    app: './src/index.js'
+    app: './src/index.js',
+         'production-dependencies': ['phaser']
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'main.js'
+    filename: '[name].js'
   },
   devtool: 'inline-source-map',
   devServer: {
@@ -53,6 +54,12 @@ module.exports = {
     new webpack.DefinePlugin({
       'typeof CANVAS_RENDERER': JSON.stringify(true),
       'typeof WEBGL_RENDERER': JSON.stringify(true)
-    })
-  ]
+    }),
+  ],
+  optimization: {
+    splitChunks: {
+      name: 'production-dependencies',
+      filename: 'production-dependencies.bundle.js'
+    },
+  },
 }
