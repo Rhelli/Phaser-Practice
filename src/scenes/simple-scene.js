@@ -2,6 +2,8 @@ let platforms;
 let player;
 let cursors;
 let stars;
+let score = 0;
+let scoreText;
 
 class SimpleScene extends Phaser.Scene {
   preload() {
@@ -53,12 +55,16 @@ class SimpleScene extends Phaser.Scene {
     });
 
     stars.children.iterate((child) => {
-      child.setBounce(Phaser.Math.FloatBetween(0.4, 0.8));
+      child.setBounce(Phaser.Math.FloatBetween(0.2, 0.4));
     });
 
     const collectStar = (player, star) => {
       star.disableBody(true, true)
+      score += 10;
+      scoreText.setText('Score: ' + score);
     }
+
+    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', file: '#000' });
 
     this.physics.add.collider(stars, platforms);
     this.physics.add.overlap(player, stars, collectStar, null, this);
