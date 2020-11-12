@@ -1,6 +1,7 @@
 let platforms;
 let player;
 let cursors;
+let stars;
 
 class SimpleScene extends Phaser.Scene {
   preload() {
@@ -45,6 +46,22 @@ class SimpleScene extends Phaser.Scene {
       repeat: -1
     });
 
+    stars = this.physics.add.group({
+      key: 'star',
+      repeat: 11,
+      setXY: { x: 12, y: 0, stepX: 70 }
+    });
+
+    stars.children.iterate((child) => {
+      child.setBounce(Phaser.Math.FloatBetween(0.4, 0.8));
+    });
+
+    const collectStar = (player, star) => {
+      star.disableBody(true, true)
+    }
+
+    this.physics.add.collider(stars, platforms);
+    this.physics.add.overlap(player, stars, collectStar, null, this);
     this.physics.add.collider(player, platforms);
     cursors = this.input.keyboard.createCursorKeys();
   }
